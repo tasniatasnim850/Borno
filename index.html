@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বর্ণের স্পেশাল উন্মুক্ত কুইজ</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #fceabb, #f8b500); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .quiz-container { background: #fff; width: 100%; max-width: 450px; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
+        .biryani-img { width: 100%; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #d35400; font-size: 20px; margin-bottom: 10px; }
+        h2 { color: #2c3e50; font-size: 19px; line-height: 1.5; margin-bottom: 25px; }
+        .btn-container { display: flex; flex-direction: column; gap: 12px; }
+        button { background: #e67e22; color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-size: 17px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #d35400; transform: translateY(-2px); }
+        #score-area { display: none; }
+        .share-fb { background: #1877f2; margin-top: 20px; }
+        .restart-btn { background: #27ae60; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="start-screen">
+        <img src="https://img.freepik.com/free-photo/chicken-biryani-white-plate_140725-10499.jpg" alt="Biryani" class="biryani-img">
+        <h1>আপনাদের বর্ণের স্পেশাল উন্মুক্ত কুইজে স্বাগতম</h1>
+        <button onclick="startGame()">গেম খেলুন</button>
+    </div>
+
+    <div id="question-area" style="display: none;">
+        <h2 id="questionText"></h2>
+        <div id="optionsBtns" class="btn-container"></div>
+    </div>
+
+    <div id="score-area">
+        <h2 id="finalMsg"></h2>
+        <p id="finalScore" style="font-size: 22px; color: #d35400; font-weight: bold;"></p>
+        <button class="share-fb" onclick="shareOnFB()">ফেসবুকে শেয়ার কর</button>
+        <button class="restart-btn" onclick="location.reload()" style="margin-top: 10px;">আবার খেলুন</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "১/ উন্মুক্ত লাইব্রেরির লেখিকা কে?", a: ["আয্যাহ সূচনা", "ইয়ামেতে কুদাসাই"], correct: 0 },
+        { q: "২/ নির্বাচনের বিরিয়ানি মার্কার প্রার্থী কে?", a: ["বর্ণ", "কালনাগিনী"], correct: 0 },
+        { q: "৩/ জয় ভন্ড জিতবে এইবার ___?", a: ["বর্ণ", "কচু"], correct: 0 },
+        { q: "৪/ কোনটা খেলে পেট ভরে?", a: ["বিরিয়ানি", "বিড়ি"], correct: 0 },
+        { q: "৫/ কার সিস্টেমে সমস্যা?", a: ["বর্ণ", "তন্ময়"], correct: 0 },
+        { q: "৬/ আপনি কাকে ভোট দিবেন?", a: ["বর্ণকে", "ভন্ডকে"], correct: 0 },
+        { q: "৭/ বর্ণের প্রোডাক্টের নাক কি?", a: ["বর্ষন", "বহিপীর"], correct: 0 },
+        { q: "৮/ কে বেশি ভন্ড?", a: ["বর্ণ", "কুদাসাই"], correct: 0 },
+        { q: "৯/ বর্ণের ডার্লিং এর নাম কি?", a: ["জনি", "ছাদিয়া"], correct: 0 },
+        { q: "১০/ বর্ন জিতলে কার লাভ?", a: ["ভন্ডদের", "কুদাসাইয়ের"], correct: 0 }
+    ];
+
+    let currentQ = 0; 
+    let score = 0;
+
+    function startGame() {
+        document.getElementById("start-screen").style.display = "none";
+        document.getElementById("question-area").style.display = "block";
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const qData = questions[currentQ];
+        document.getElementById("questionText").innerText = qData.q;
+        const optionsDiv = document.getElementById("optionsBtns");
+        optionsDiv.innerHTML = "";
+        
+        qData.a.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === questions[currentQ].correct) score++;
+        currentQ++;
+        if (currentQ < questions.length) loadQuestion();
+        else showScore();
+    }
+
+    function showScore() {
+        document.getElementById("question-area").style.display = "none";
+        document.getElementById("score-area").style.display = "block";
+        
+        let msg = "";
+        if (score === 10) {
+            msg = "আরে এ তো দেখি পুরাই আগুন 🔥";
+        } else if (score >= 1) {
+            msg = "যাহ বলদা 💩";
+        } else {
+            msg = "যতসব ছাগলের দল 🐐";
+        }
+        
+        document.getElementById("finalMsg").innerText = msg;
+        document.getElementById("finalScore").innerText = "তোর স্কোর: " + score + " / 10";
+    }
+
+    function shareOnFB() {
+        const text = "আমি বর্ণের স্পেশাল কুইজে ১০ এর মধ্যে " + score + " পেয়েছি! তুই কি পারবি?";
+        window.open("https://www.facebook.com/sharer/sharer.php?u=" + window.location.href + "&quote=" + encodeURIComponent(text), '_blank');
+    }
+</script>
+
+</body>
+</html>
